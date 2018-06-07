@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions 
+		xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+		xmlns:tns="mil:nga:getProducts" 
+		xmlns:tn="mil:nga:productBundler" 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+		xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:nga="http://www.geoint.nga.ic.gov" 
+		name="GetProductsService" 
+		targetNamespace="mil:nga:getProducts">
+	<wsdl:documentation>
+		<tns:nga_resource>./nga_resource.xml</tns:nga_resource>
+		<tns:description_document>./description_document.html</tns:description_document>
+	</wsdl:documentation>
+	<wsdl:types>
+		<xsd:schema>
+			<xsd:import namespace="mil:nga:getProducts" schemaLocation="getProductsService.xsd"/>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="getProductsBboxMsg">
+		<wsdl:part name="parameters" element="tns:GetProductsBBOXmessage"/>
+	</wsdl:message>
+	<wsdl:message name="getProductsWktMsg">
+		<wsdl:part name="parameters" element="tns:GetProductsWKTmessage"/>
+	</wsdl:message>
+	<wsdl:message name="getProductsUnitMsg">
+		<wsdl:part name="parameters" element="tns:GetProductsUnitNamemessage"/>
+	</wsdl:message>
+	<wsdl:message name="getProductsCNTRYMsg">
+		<wsdl:part name="parameters" element="tns:GetProductsCNTRYmessage"/>
+	</wsdl:message>
+	<wsdl:message name="GetProductsAOR_JMPMsg">
+		<wsdl:part name="parameters" element="tns:GetProductsAOR_JMPmessage"/>
+	</wsdl:message>
+	<wsdl:message name="requestResponseMsg">
+		<wsdl:part name="result" element="tns:requestResponse"/>
+	</wsdl:message>
+	<wsdl:portType name="GetProducts">
+		<wsdl:operation name="getProductsBbox">
+			<wsdl:input message="tns:getProductsBboxMsg"/>
+			<wsdl:output message="tns:requestResponseMsg"/>
+		</wsdl:operation>
+		<wsdl:operation name="getProductsWkt">
+			<wsdl:input message="tns:getProductsWktMsg"/>
+			<wsdl:output message="tns:requestResponseMsg"/>
+		</wsdl:operation>
+		<wsdl:operation name="getProductsUnit">
+			<wsdl:input message="tns:getProductsUnitMsg"/>
+			<wsdl:output message="tns:requestResponseMsg"/>
+		</wsdl:operation>
+		<wsdl:operation name="getProductsCNTRY">
+			<wsdl:input message="tns:getProductsCNTRYMsg"/>
+			<wsdl:output message="tns:requestResponseMsg"/>
+		</wsdl:operation>
+		<wsdl:operation name="getProductsAorJmp">
+			<wsdl:input message="tns:GetProductsAOR_JMPMsg"/>
+			<wsdl:output message="tns:requestResponseMsg"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="GetProductsPortBinding" type="tns:GetProducts">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="getProductsBbox">
+			<soap:operation soapAction=""/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getProductsWkt">
+			<soap:operation soapAction=""/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getProductsUnit">
+			<soap:operation soapAction=""/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getProductsCNTRY">
+			<soap:operation soapAction=""/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getProductsAorJmp">
+			<soap:operation soapAction=""/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="get_products_service">
+		<wsdl:port name="getProductsServicePort" binding="tns:GetProductsPortBinding">
+			<soap:address location="PUT ACTUAL ADDRESS HERE" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:sec="mil:nga:security" xmlns:tn="mil:nga:downloadproductsxmlresponse" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="mil:nga:downloadproductsxmlresponse" elementFormDefault="qualified" version="1.0">
+	<xsd:import namespace="mil:nga:security" schemaLocation="security.xsd"/>
+	<xsd:annotation>
+		<xsd:documentation>
+				Author: Dave Couch, TLW
+				Purpose: to allow XML marshaling from class objects normally 
+				returned via JSON.  			
+				This schema will be imported into "getProductsService" WSDL and will
+				support unbounded products to be loaded as an array.  Presently, 
+				the getProductsService only supports one product.
+				Class beans (with getter/setter methods) will be built by JAXB.
+				The enumerations are for illustration purposes only.  Subsequent
+				data format support changes may change the enumerations.  
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<!-- definition of a bounding box.  Assumption is WGS-84 Geographic projection with Decimal Degree formatted coordinates-->
+	<!--Definition of Bounding Box-->
+	<xsd:complexType name="BBOX">
+		<xsd:annotation>
+			<xsd:documentation>
+        Bounding Box of the product as a Lower Left / Upper Right Corners.  Required to be [+|-]DD for each coordinate.
+        Example: -10.098723 for LowerLeftLat.
+      </xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="LowerLeftLat" type="xsd:double" nillable="false"/>
+			<xsd:element name="LowerLeftLon" type="xsd:double" nillable="false"/>
+			<xsd:element name="UpperRightLat" type="xsd:double" nillable="false"/>
+			<xsd:element name="UpperRightLon" type="xsd:double" nillable="false"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="DefaultFormat">
+		<xsd:attribute name="value" type="xsd:int"/>
+		<xsd:attribute name="name" type="xsd:string"/>
+	</xsd:complexType>
+	<xsd:simpleType name="RpfOutputType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="SUN Raster" id="rpf_2"/>
+			<xsd:enumeration value="ERDAS Lan" id="rpf_3"/>
+			<xsd:enumeration value="TIFF" id="rpf_4"/>
+			<xsd:enumeration value="GeoTIFF 2 byte elevations" id="rpf_5"/>
+			<xsd:enumeration value="BMP" id="rpf_8"/>
+			<xsd:enumeration value="MapInfo" id="rpf_13"/>
+			<xsd:enumeration value="ERDAS Imagine" id="rpf_14"/>
+			<xsd:enumeration value="PNG" id="rpf_15"/>
+			<xsd:enumeration value="ArcView Raster" id="rpf_16"/>
+			<xsd:enumeration value="JPEG" id="rpf_18"/>
+			<xsd:enumeration value="USGS DEM" id="rpf_22"/>
+			<xsd:enumeration value="SGI RGB" id="rpf_24"/>
+			<xsd:enumeration value="IDRISI" id="rpf_27"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="RpfOptions">
+		<xsd:attribute name="value" type="xsd:int"/>
+		<xsd:attribute name="name" type="tn:RpfOutputType"/>
+	</xsd:complexType>
+	<xsd:simpleType name="DtedOutputType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ERDAS Lan" id="dted_3"/>
+			<xsd:enumeration value="GeoTIFF 2 byte elevations" id="dted_5"/>
+			<xsd:enumeration value="ARC-Info Lattice 5.0" id="dted_9"/>
+			<xsd:enumeration value="Vista Pro" id="dted_12"/>
+			<xsd:enumeration value="ERDAS Imagine" id="dted_14"/>
+			<xsd:enumeration value="PNG" id="dted_15"/>
+			<xsd:enumeration value="VRML" id="dted_17"/>
+			<xsd:enumeration value="JPEG Shaded Relief Image" id="dted_18"/>
+			<xsd:enumeration value="ARC Info ASCII Grid" id="dted_19"/>
+			<xsd:enumeration value="ARC Info Float Grid" id="dted_20"/>
+			<xsd:enumeration value="USGS DEM" id="dted_22"/>
+			<xsd:enumeration value="Vis5D" id="dted_25"/>
+			<xsd:enumeration value="IDRISI" id="dted_27"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="DtedOptions">
+		<xsd:attribute name="value" type="xsd:int"/>
+		<xsd:attribute name="name" type="tn:DtedOutputType"/>
+	</xsd:complexType>
+	<xsd:simpleType name="DoqqOutputType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="GeoTIFF 2 byte elevations" id="doqq_5"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="DoqqOptions">
+		<xsd:attribute name="value" type="xsd:int"/>
+		<xsd:attribute name="name" type="tn:DoqqOutputType"/>
+	</xsd:complexType>
+	<xsd:simpleType name="SrtmOutputTypeValue">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="aoim"/>
+			<xsd:enumeration value="doim"/>
+			<xsd:enumeration value="water"/>
+			<xsd:enumeration value="shape"/>
+			<xsd:enumeration value="shcm"/>
+			<xsd:enumeration value="thed"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SrtmOutputType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Ascending Orthorectified Image Mosaic Files" id="aoim"/>
+			<xsd:enumeration value="Descending Orthorectified Image Mosaic Files" id="doim"/>
+			<xsd:enumeration value="Shuttle Water Body Data Files" id="water"/>
+			<xsd:enumeration value="Void Shape Files" id="shape"/>
+			<xsd:enumeration value="Seam-Hole Composite Map Files" id="shcm"/>
+			<xsd:enumeration value="Terrain Height Error Data Files" id="thed"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="SrtmOptions">
+		<xsd:attribute name="value" type="tn:SrtmOutputTypeValue"/>
+		<xsd:attribute name="name" type="tn:SrtmOutputType"/>
+	</xsd:complexType>
+	<xsd:simpleType name="CtpOutputTypeValue">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ctp_collarless"/>
+			<xsd:enumeration value="ctp_collared"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CtpOutputType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Include Collarless" id="ctp_collarless"/>
+			<xsd:enumeration value="Include Collared" id="ctp_collared"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="CtpOptions">
+		<xsd:attribute name="value" type="tn:CtpOutputTypeValue"/>
+		<xsd:attribute name="name" type="tn:CtpOutputType"/>
+	</xsd:complexType>
+	<xsd:simpleType name="ArchiveOutputTypeValue">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ZipFTP"/>
+			<xsd:enumeration value="TarFTP"/>
+			<xsd:enumeration value="GzipFTP"/>
+			<xsd:enumeration value="CompressFTP"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="ArchiveOutputType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="Windows ZIP file"/>
+			<xsd:enumeration value="Unix Tar File"/>
+			<xsd:enumeration value="Windows Gzip file Compressed"/>
+			<xsd:enumeration value="UNIX z file Compressed"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="ArchiveOptions">
+		<xsd:attribute name="type" type="tn:ArchiveOutputTypeValue"/>
+		<xsd:attribute name="name" type="tn:ArchiveOutputType"/>
+	</xsd:complexType>
+	<xsd:complexType name="OutputType">
+		<xsd:sequence>
+			<xsd:element name="rpfOptions" type="tn:RpfOptions" nillable="true" maxOccurs="unbounded"/>
+			<xsd:element name="dtedOptions" type="tn:DtedOptions" nillable="true" maxOccurs="unbounded"/>
+			<xsd:element name="doqqOptions" type="tn:DoqqOptions" nillable="true" maxOccurs="unbounded"/>
+			<xsd:element name="srtmOptions" type="tn:SrtmOptions" nillable="true" maxOccurs="unbounded"/>
+			<xsd:element name="ctpOptions" type="tn:CtpOptions" nillable="true" maxOccurs="unbounded"/>
+			<xsd:element name="defaultFormat" type="tn:DefaultFormat"/>
+		</xsd:sequence>
+		<xsd:attribute name="value" type="xsd:integer"/>
+	</xsd:complexType>
+	<xsd:complexType name="ArchiveType">
+		<xsd:sequence>
+			<xsd:element name="archiveOptions" type="tn:ArchiveOptions" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="value" type="xsd:integer"/>
+	</xsd:complexType>
+	<xsd:complexType name="ListFile">
+		<xsd:annotation>
+			<xsd:documentation>
+						File list of frame paths
+					</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="listFilePath" nillable="false">
+				<xsd:complexType>
+					<xsd:attribute name="path" type="xsd:string"/>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="listFileContents" nillable="false" minOccurs="1" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:attribute name="path" type="xsd:string"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Product">
+		<xsd:sequence>
+			<xsd:annotation>
+				<xsd:documentation>
+						This is the prodtag
+					</xsd:documentation>
+			</xsd:annotation>
+			<xsd:element name="productName" type="xsd:string"/>
+			<xsd:element name="productDescription" type="xsd:string"/>
+			<xsd:element name="frameCount" type="xsd:string"/>
+			<xsd:element name="fileSize_bytes" type="xsd:long"/>
+			<xsd:element name="PostURL" type="xsd:string"/>
+			<xsd:element name="bbox" type="tn:BBOX"/>
+			<xsd:element name="product" type="xsd:string"/>
+			<xsd:element name="command" type="xsd:string"/>
+			<xsd:element name="palType" type="xsd:string"/>
+			<xsd:element name="nullvalue" type="xsd:string"/>
+			<xsd:element name="outputType" type="tn:OutputType"/>
+			<xsd:element name="archiveType" type="tn:ArchiveType"/>
+			<xsd:element name="listFile" type="tn:ListFile" nillable="false"/>
+		</xsd:sequence>
+		<xsd:attribute name="ProdTag" type="xsd:string" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="DownloadProductsXMLResponse">
+		<xsd:sequence>
+			<xsd:element name="product" type="tn:Product" nillable="false" minOccurs="1" maxOccurs="unbounded"/>
+			<xsd:element name="security" type="sec:SecurityElement"/>
+			<xsd:element name="Error" type="xsd:string"/>			
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="downloadProductsXMLResponse" type="tn:DownloadProductsXMLResponse"/>
+</xsd:schema>
