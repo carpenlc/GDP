@@ -1,22 +1,78 @@
 package mil.nga.gdp;
 
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import mil.nga.gdp.types.OperationType;
+import mil.nga.gdp.exceptions.IllegalTypeException;
+import mil.nga.gdp.exceptions.InvalidParameterException;
+import mil.nga.gdp.messages.ProductsByAORJMPCode;
+import mil.nga.gdp.messages.ProductsByBBox;
+import mil.nga.gdp.messages.ProductsByCountry;
+import mil.nga.gdp.messages.ProductsByUnit;
+import mil.nga.gdp.messages.ProductsByWKT;
 
-public class OperationFactory {
+public class OperationFactory implements GDPConstantsI {
 
+	/** 
+	 * Set up the logging subsystem for use throughout the class
+	 */
+	static final Logger LOG = LoggerFactory.getLogger(
+			OperationFactory.class);
+	
 	/**
 	 * Private constructor enforcing the Singleton design pattern.
 	 */
 	private OperationFactory() { }
 	
-	
-	public OperationI getOperationImpl(OperationType type) {
-		OperationI concrete = null;
-		if (type == OperationType.BY_BBOX) {
-			
+	/**
+	 * Retrieve the operation type from the input parameter list.
+	 * 
+	 * @param params The servlet input parameters.
+	 * @return The operation type requested by the user.
+	 */
+	private OperationType getOperationType(Map<String, String> params) 
+			throws IllegalTypeException, InvalidParameterException, IllegalStateException { 
+		if (params != null) {
+			String operation = params.get(OPERATION_INPUT_PARAM);
+			return OperationType.fromString(operation);
+  		}
+		else {
+			throw new InvalidParameterException(
+					"No input parameters supplied.");
 		}
-		
-		return concrete;
+	}
+	
+	
+	public void runOperation(Map<String, String> params) 
+			throws IllegalTypeException, InvalidParameterException {
+		OperationType type = getOperationType(params);
+		switch (type) {
+			case BY_BBOX:
+				new ProductsByBBox.ProductsByBBoxBuilder()
+						.fromMessage(params)
+						.build();
+			case BY_JUMP_CODE:
+				new ProductsByAORJMPCode.ProductsByAORJMPCodeBuilder()
+						.fromMessage(params)
+						.build();
+			case BY_WKT:
+				new ProductsByWKT.ProductsByWKTBuilder()
+						.fromMessage(params)
+						.build();
+			case BY_UNIT:
+				new ProductsByUnit.ProductsByUnitBuilder()
+						.fromMessage(params)
+						.build();
+			case BY_COUNTRY:
+				new ProductsByCountry.ProductsByCountryBuilder()
+						.fromMessage(params)
+						.build();
+			default:
+				LOG.error("Unsupported operation type submitted.");
+		}
 	}
 	
 	/**

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import mil.nga.gdp.GDPConstantsI;
-import mil.nga.gdp.exceptions.InvalidParameterException;
 
 /**
  * Class encapsulating the data supplied by clients when they want to extract 
@@ -24,29 +23,12 @@ public class ProductsByWKT
 	private String wktString = null;
 	
 	/**
-	 * Default constructor required by JAX-B.
+	 * Default constructor.
+	 * @param builder The builder object.
 	 */
-	public ProductsByWKT() {}
-	
-	/**
-	 * Alternate constructor allowing clients to supply the required input 
-	 * parameters embedded in a Map data structure.
-	 * 
-	 * @param map List of key/value pairs containing all required input 
-	 * parameters.
-	 */
-	public ProductsByWKT(Map<String, String> map) 
-			throws InvalidParameterException {
-		super(map);
-		
-		if ((map != null) && (map.size() > 0)) {
-			setWKTString(map.get(WKT_INPUT_PARAM));
-		}
-		else {
-			throw new InvalidParameterException("Unable to parse input URL "
-					+ "parameters.  The input list of parameters is null or "
-					+ "contains no elements.");
-		}
+	protected ProductsByWKT(ProductsByWKTBuilder builder) {
+		super(builder);
+		wktString  = builder.wktString;
 	}
 	
 	/**
@@ -56,21 +38,68 @@ public class ProductsByWKT
 	public String getWKTString() {
 		return wktString;
 	}
-	
-	/**
-	 * Setter method for the requested well known text (WKT) String.
-	 * 
-	 * @param value Client supplied WKT String.
-	 * @throws InvalidParameterException Thrown if the input tag is null or 
-	 * empty.
-	 */
-	public void setWKTString(String value) throws InvalidParameterException {
-		if ((value != null) && (!value.isEmpty())) { 
-			wktString = value;
-		}
-		else {
-			throw new InvalidParameterException("Parameter defining the "
-					+ "WKT String is null or empty.");
-		}
-	}
+
+    /**
+     * Internal static class implementing the builder creation pattern for new
+     * ProductsByUnit objects.
+     * 
+     * @author L. Craig Carpenter
+     */
+    public static class ProductsByWKTBuilder
+    	extends ProductMessage.ProductMessageBuilder
+    		<ProductsByWKTBuilder> {
+    	
+    	private String wktString = null;
+    	
+    	/**
+    	 * Method to actually construct a concrete object of type 
+    	 * ProductsByWKT.
+    	 */
+    	public ProductsByWKT build() throws IllegalStateException {
+    		ProductsByWKT obj = new ProductsByWKT(this);
+    		validateProductsByWKT(obj);
+    		return obj;
+    	}
+    	
+    	/**
+    	 * Setter method for the requested well-known-text String.
+    	 * 
+    	 * @param value Client supplied well-known-text String.
+    	 */
+    	public ProductsByWKTBuilder wktString(String value) {
+    		wktString = value;
+    		return this;
+    	}
+    	
+    	/**
+    	 * Alternate constructor allowing clients to supply the required input 
+    	 * parameters embedded in a Map data structure.
+    	 * 
+    	 * @param map List of key/value pairs containing all required input 
+    	 * parameters.
+    	 */
+    	public ProductsByWKTBuilder fromMessage(Map<String, String> map) {
+    		if ((map != null) && (map.size() > 0)) {
+    			super.fromMessage(map);
+    			wktString(map.get(WKT_INPUT_PARAM));
+    		}
+    		return this;
+    	}
+    	
+        /**
+         * Validation for the input request.
+         * 
+         * @param obj Constructed object to test.
+         * @throws IllegalStateException Thrown if there are inconsistencies 
+         * in the input data.
+         */
+        public void validateProductsByWKT(ProductsByWKT obj) 
+        		throws IllegalStateException {
+        	if ((obj.getWKTString() == null) || 
+        			(obj.getWKTString().isEmpty())) {  
+        		throw new IllegalStateException("WKT string is null or not "
+        				+ "defined.");
+        	}
+        }
+    }
 }

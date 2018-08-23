@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import mil.nga.gdp.GDPConstantsI;
-import mil.nga.gdp.exceptions.InvalidParameterException;
 
 /**
  * Class encapsulating the data supplied by clients when they want to extract 
@@ -21,35 +20,16 @@ public class ProductsByAORJMPCode
 	 */
 	private static final long serialVersionUID = -9073932447033857074L;
 	
-	private String code = null;
-	private String aorOrCode = null;
+	private final String code;
+	private final String aorOrCode;
 	
 	/**
 	 * Default constructor required by JAX-B.
 	 */
-	public ProductsByAORJMPCode() {}
-	
-	/**
-	 * Alternate constructor allowing clients to supply the required input 
-	 * parameters embedded in a Map data structure.
-	 * 
-	 * @param map List of key/value pairs containing all required input 
-	 * parameters.
-	 */
-	public ProductsByAORJMPCode(Map<String, String> map) 
-			throws InvalidParameterException {
-		
-		super(map);
-		
-		if ((map != null) && (map.size() > 0)) {
-			setCode(map.get(CODE_INPUT_PARAM));
-			setAorOrCode(map.get(AOR_INPUT_PARAM));
-		}
-		else {
-			throw new InvalidParameterException("Unable to parse input URL "
-					+ "parameters.  The input list of parameters is null or "
-					+ "contains no elements.");
-		}
+	protected ProductsByAORJMPCode(ProductsByAORJMPCodeBuilder builder) {
+		super(builder);
+		code      = builder.code;
+		aorOrCode = builder.aorOrCode;
 	}
 	
 	/**
@@ -67,38 +47,98 @@ public class ProductsByAORJMPCode
 	public String getCode() {
 		return code;
 	}
-	
-	/**
-	 * Setter method for the requested code String.
-	 * 
-	 * @param value Client supplied code.
-	 * @throws InvalidParameterException Thrown if the input tag is null or 
-	 * empty.
-	 */
-	public void setCode(String value) throws InvalidParameterException {
-		if ((value != null) && (!value.isEmpty())) { 
-			code = value;
-		}
-		else {
-			throw new InvalidParameterException("Parameter defining the "
-					+ "code is null or empty.");
-		}
-	}
-	
-	/**
-	 * Setter method for the requested AOR String.
-	 * 
-	 * @param value Client supplied AOR String
-	 * @throws InvalidParameterException Thrown if the input value is null or 
-	 * empty.
-	 */
-	public void setAorOrCode(String value) throws InvalidParameterException {
-		if ((value != null) && (!value.isEmpty())) { 
-			aorOrCode = value;
-		}
-		else {
-			throw new InvalidParameterException("Parameter defining the "
-					+ "code is null or empty.");
-		}
-	}
+
+    /**
+     * Convert the input message into a String-base format.
+     */
+    public String toString() {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("Input request: ");
+    	sb.append(super.toString());
+    	sb.append("Code => [ ");
+    	sb.append(getCode());
+    	sb.append(" ], aorOrCode => [ ");
+    	sb.append(getAorOrCode());
+    	sb.append(" ].");
+    	return sb.toString();
+    }
+
+    /**
+     * Internal static class implementing the builder creation pattern for new
+     * ProductByBBox objects.
+     * 
+     * @author L. Craig Carpenter
+     */
+    public static class ProductsByAORJMPCodeBuilder 
+    	extends ProductMessage.ProductMessageBuilder
+    		<ProductsByAORJMPCodeBuilder> {
+    	
+    	private String code      = null;
+    	private String aorOrCode = null;
+    	
+    	/**
+    	 * Method used to actually construct the concrete object.
+    	 * @throws IllegalStateException Thrown if there are inconsistencies
+    	 * in the input request.
+    	 */
+    	public ProductsByAORJMPCode build() throws IllegalStateException {
+    		ProductsByAORJMPCode obj = new ProductsByAORJMPCode(this);
+    		validateProductsByAORJMPCodeObj(obj);
+    		return obj;
+    	}
+    	
+    	/**
+    	 * Setter method for the requested code String.
+    	 * @param value Client supplied code.
+    	 */
+    	public ProductsByAORJMPCodeBuilder code(String value) {
+    		code = value;
+    		return this;
+    	}
+    	
+    	/**
+    	 * Setter method for the requested AOR String.
+    	 * @param value Client supplied AOR String
+    	 */
+    	public ProductsByAORJMPCodeBuilder aorOrCode(String value) {
+    		aorOrCode = value;
+    		return this;
+    	}
+    	
+    	/**
+    	 * Alternate constructor allowing clients to supply the required input 
+    	 * parameters embedded in a Map data structure.
+    	 * 
+    	 * @param map List of key/value pairs containing all required input 
+    	 * parameters.
+    	 * @throws IllegalStateException Thrown if the input map is not 
+    	 * populated.
+    	 */
+    	public ProductsByAORJMPCodeBuilder fromMessage(
+    			Map<String, String> map) throws IllegalStateException {
+    		if ((map != null) && (map.size() > 0)) {
+    			super.fromMessage(map);
+    			code(map.get(CODE_INPUT_PARAM));
+    			aorOrCode(map.get(AOR_INPUT_PARAM));
+    		}
+    		return this;
+    	}
+    	
+    	/**
+    	 * Validate the constructed message object.
+    	 * @param obj Object to validate.
+   	     * @throws IllegalStateException Thrown if there are inconsistencies
+    	 * in the constructed object.
+    	 */
+    	public void validateProductsByAORJMPCodeObj(ProductsByAORJMPCode obj) 
+    			throws IllegalStateException {
+    		if (((obj.getAorOrCode() == null) || 
+    				(obj.getAorOrCode().isEmpty()))
+    			&& ((obj.getCode() == null) || 
+    					(obj.getCode().isEmpty()))) {
+    			throw new IllegalStateException("Either the AorOrCode or Code field "
+    					+ "must be populated.  Both cannot be empty.");
+    		}
+    	}
+    }
 }

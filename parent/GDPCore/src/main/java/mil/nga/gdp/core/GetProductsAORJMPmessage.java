@@ -43,15 +43,17 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetProductsAOR_JMPmessage", namespace = "mil:nga:getProducts", propOrder = {
-    "security",
-    "origGdnCompatable",
-    "productTag",
-    "code",
-    "aorOrCode",
-    "fromDate",
-    "toDate",
-    "directDownload"
+@XmlType(name      = "GetProductsAOR_JMPmessage", 
+         namespace = "mil:nga:getProducts", 
+         propOrder = {
+             "security",
+             "origGdnCompatable",
+             "productTag",
+             "code",
+             "aorOrCode",
+             "fromDate",
+             "toDate",
+             "directDownload"
 })
 public class GetProductsAORJMPmessage {
 

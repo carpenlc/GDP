@@ -22,24 +22,17 @@ public class Classification implements Serializable {
 	 */
 	private static final long serialVersionUID = -1401773116895257882L;
 
-	private String classification = "";
-	private String releasability = "";
+	private final String classification;
+	private final String releasability;
 	
 	/**
-	 * Default no-arg constructor required by JAX-B
+	 * Default constructor requiring clients to supply the builder object.
+	 * @param builder The builder object.
 	 */
-	public Classification() {} 
-	
-	/**
-	 * Alternate constructor allowing clients to set internal members on 
-	 * construction.
-	 * @param classification The classification
-	 * @param releasability The releasability
-	 */
-	public Classification(String classification, String releasability) { 
-		setClassification(classification);
-		setReleasability(releasability);
-	}
+	public Classification(ClassificationBuilder builder) {
+		classification = builder.classification;
+		releasability  = builder.releasability;
+	} 
 	
 	/**
 	 * Getter method for classification.
@@ -60,22 +53,6 @@ public class Classification implements Serializable {
 	}
 
 	/**
-	 * Setter method for classification.
-	 * @param value The associated classification.
-	 */
-	public void setClassification(String value) {
-		classification = value;
-	}
-	
-	/**
-	 * Setter method for releasability.
-	 * @param value The associated releasability.
-	 */
-	public void setReleasability(String value) {
-		releasability = value;
-	}
-	
-	/**
 	 * Convert to human-readable String.
 	 */
 	@Override
@@ -87,5 +64,57 @@ public class Classification implements Serializable {
 		sb.append(getReleasability());
 		sb.append(" ]");
 		return sb.toString();
+	}
+	
+	/**
+	 * Internal static class implementing the builder creation pattern for new
+	 * <code>Classification</code> objects.
+	 * 
+	 * @author L. Craig Carpenter
+	 */
+	public static class ClassificationBuilder {
+		
+		private String classification;
+		private String releasability;
+		
+		/** 
+		 * Method used to construct an object of type Classification.
+		 * @return An object of type classification.
+		 */
+		public Classification build() {
+			validateClassificationObject();
+			return new Classification(this);
+		}
+		
+		/**
+		 * Setter method for releasability.
+		 * @param value The associated releasability.
+		 */
+		public ClassificationBuilder releasability(String value) {
+			releasability = value;
+			return this;
+		}
+		
+		/**
+		 * Setter method for classification.
+		 * @param value The associated classification.
+		 */
+		public ClassificationBuilder classification(String value) {
+			classification = value;
+			return this;
+		}
+
+		/**
+		 * Validate the internal fields before allowing construction of
+		 * a new object.
+		 */
+		public void validateClassificationObject() {
+			if (classification == null) {
+				classification = "";
+			}
+			if (releasability == null) {
+				releasability = "";
+			}
+		}
 	}
 }

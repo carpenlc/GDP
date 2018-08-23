@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import mil.nga.gdp.GDPConstantsI;
-import mil.nga.gdp.exceptions.InvalidParameterException;
 
 /**
  * Class encapsulating the data supplied by clients when they want to extract 
@@ -21,32 +20,15 @@ public class ProductsByUnit
 	 */
 	private static final long serialVersionUID = 8609416117780574428L;
 	
-	private String downloadID = null;
+	private final String downloadID;
 
 	/**
-	 * Default constructor required by JAX-B.
+	 * Default constructor.
+	 * @param builder The builder object.
 	 */
-	public ProductsByUnit() {}
-
-	/**
-	 * Alternate constructor allowing clients to supply the required input 
-	 * parameters embedded in a Map data structure.
-	 * 
-	 * @param map List of key/value pairs containing all required input 
-	 * parameters.
-	 */
-	public ProductsByUnit(Map<String, String> map) 
-			throws InvalidParameterException {
-		super(map);
-		
-		if ((map != null) && (map.size() > 0)) {
-			setDownloadID(map.get(DOWNLOAD_ID_INPUT_PARAM));
-		}
-		else {
-			throw new InvalidParameterException("Unable to parse input URL "
-					+ "parameters.  The input list of parameters is null or "
-					+ "contains no elements.");
-		}
+	protected ProductsByUnit(ProductsByUnitBuilder builder) {
+		super(builder);
+		downloadID  = builder.downloadID;
 	}
 
 	/**
@@ -57,20 +39,67 @@ public class ProductsByUnit
 		return downloadID;
 	}
 
-	/**
-	 * Setter method for the requested download ID.
-	 * 
-	 * @param value Client supplied download ID.
-	 * @throws InvalidParameterException Thrown if the input tag is null or 
-	 * empty.
-	 */
-	public void setDownloadID(String value) throws InvalidParameterException {
-		if ((value != null) && (!value.isEmpty())) { 
-			downloadID = value;
-		}
-		else {
-			throw new InvalidParameterException("Parameter defining the "
-					+ "download ID is null or empty.");
-		}
-	}
+    /**
+     * Internal static class implementing the builder creation pattern for new
+     * ProductsByUnit objects.
+     * 
+     * @author L. Craig Carpenter
+     */
+    public static class ProductsByUnitBuilder
+    	extends ProductMessage.ProductMessageBuilder
+    		<ProductsByUnitBuilder> {
+    	
+    	private String downloadID = null;
+    	
+    	/**
+    	 * Method to actually construct a concrete object of type 
+    	 * ProductsByUnit.
+    	 */
+    	public ProductsByUnit build() throws IllegalStateException {
+    		ProductsByUnit obj = new ProductsByUnit(this);
+    		validateProductsByUnit(obj);
+    		return obj;
+    	}
+    	
+    	/**
+    	 * Setter method for the requested download ID.
+    	 * 
+    	 * @param value Client supplied download ID.
+    	 */
+    	public ProductsByUnitBuilder downloadID(String value) {
+    		downloadID = value;
+    		return this;
+    	}
+    	
+    	/**
+    	 * Alternate constructor allowing clients to supply the required input 
+    	 * parameters embedded in a Map data structure.
+    	 * 
+    	 * @param map List of key/value pairs containing all required input 
+    	 * parameters.
+    	 */
+    	public ProductsByUnitBuilder fromMessage(Map<String, String> map) {
+    		if ((map != null) && (map.size() > 0)) {
+    			super.fromMessage(map);
+    			downloadID(map.get(DOWNLOAD_ID_INPUT_PARAM));
+    		}
+    		return this;
+    	}
+    	
+        /**
+         * Validation for the input request.
+         * 
+         * @param obj Constructed object to test.
+         * @throws IllegalStateException Thrown if there are inconsistencies 
+         * in the input data.
+         */
+        public void validateProductsByUnit(ProductsByUnit obj) 
+        		throws IllegalStateException {
+        	if ((obj.getDownloadID() == null) || 
+        			(obj.getDownloadID().isEmpty())) {  
+        		throw new IllegalStateException("Download ID is null or not "
+        				+ "defined.");
+        	}
+        }
+    }
 }

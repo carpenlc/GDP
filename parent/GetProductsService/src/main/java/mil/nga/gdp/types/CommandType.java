@@ -3,18 +3,18 @@ package mil.nga.gdp.types;
 import mil.nga.gdp.exceptions.IllegalTypeException;
 
 /**
- * Enumeration type holding a list of the various operations supported by the
- * GDP/GDN download services.
+ * Enumeration type holding a list of the various military commands.
  * 
  * @author L. Craig Carpenter
  */
-public enum OperationType {
-	BY_BBOX("getproductsbbox"),
-	BY_WKT("getproductswkt"),
-	BY_UNIT("getproductsunit"),
-	BY_COUNTRY("getproductscntry"),
-	BY_JUMP_CODE("getproductsaorjmp");
-	
+public enum CommandType {
+    NORTHCOM("northcom"), 
+    SOUTHCOM("southcom"),
+    AFRICOM("africom"),
+    PACOM("pacom"),
+    EUCOM("eucom"),
+    CENTCOM("centcom");
+
 	/**
 	 * The text field
 	 */
@@ -24,7 +24,7 @@ public enum OperationType {
 	 * Default constructor
 	 * @param value The text associated with the enumeration value.
 	 */
-	private OperationType(String value) {
+	private CommandType(String value) {
 		text = value;
 	}
 	
@@ -38,30 +38,29 @@ public enum OperationType {
 	
 	/**
 	 * Convert an input String to it's associated enumeration type.  There is 
-	 * no default type.  If the OperationType is not supplied an exception is
+	 * no default type.  If the CommandType is not supplied an exception is
 	 * raised.
 	 * 
 	 * @param value Input text information.
-	 * @return The matching OperationType.
+	 * @return The matching CommandType.
 	 * @throws IllegalTypeException Thrown if the input value is null, or 
-	 * cannot be matched to an operation type.
+	 * cannot be matched to an command type.
 	 */
-	public static OperationType fromString(String value) 
+	public static CommandType fromString(String value) 
 			throws IllegalTypeException {
 		if ((value != null) && (!value.isEmpty())) {
-			for (OperationType type : OperationType.values()) {
+			for (CommandType type : CommandType.values()) {
 				if (value.equalsIgnoreCase(type.getText())) {
 					return type;
 				}
 			}
-			throw new IllegalTypeException (
-					"[OperationType] Unknown operation requested.  "
-					+ "Operation requested => [ "
+			throw new IllegalTypeException(
+					"[CommandType] Unknown Command.  Command requested => [ "
 					+ value
 					+ " ].");
 		}
-		throw new IllegalTypeException (
-				"[OperationType] Operation not supplied.  "
+		throw new IllegalTypeException(
+				"[CommandType] Command not supplied.  "
 				+ "Input value is null or empty.");
 	}
 }
