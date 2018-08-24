@@ -56,7 +56,7 @@ public class ProductFactory {
 	 * Check to see if the in-memory product list needs to be refreshed.
 	 * @return True if the in-memory list needs to be refreshed.
 	 */
-	public boolean refresh() {
+	private boolean needsRefresh() {
 		if ((lastRefresh == null) ||
 			(getElapsedTime() == 0) || 
 			(getElapsedTime() > REFRESH_NEEDED)) {
@@ -65,11 +65,17 @@ public class ProductFactory {
 		return false;
 	}
 	
+	
+	private List<Item> refresh() {
+		
+	}
+	
 	public List<Item> getProductList() {
 		long startTime = System.currentTimeMillis();
-		if (refresh()) {
+		if (needsRefresh()) {
 			LOG.info("Refreshing product list.");
 			
+			lastRefresh = new Date();
 		}
 		
 		if (LOG.isDebugEnabled()) {
@@ -81,19 +87,25 @@ public class ProductFactory {
 	}
 	
 	/**
+	 * This method is largely migrated from the legacy GDP code.  It really 
+	 * just ensures that if a product String comes in with mixed case it can 
+	 * be matched to an existing product type.
 	 * 
-	 * @param questionable
-	 * @return
+	 * @param questionable The input product string.
+	 * @return The prodTag value matching the input string.  If no match is 
+	 * found the method returns null.
 	 */
 	public String getProductTag(String questionable) 
 			throws InvalidParameterException {
-	
+		
+		String productString = null;
+		
 		if ((questionable != null) && (!questionable.isEmpty())) {
 			List<Item> products = getProductList();
 			if (products != null) {
 				for (Item product : products) {
 					if (product.getProdTag().equalsIgnoreCase(questionable)) {
-						return questionable;
+						productString = product.getProdTag();
 					}
 				}
 			}
@@ -105,6 +117,8 @@ public class ProductFactory {
 			throw new InvalidParameterException("Input product is null or "
 					+ "not defined.  Product type must be populated.");
 		}
+		
+		return productString;
 	}
 	
 }
