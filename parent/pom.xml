@@ -29,7 +29,9 @@
 
     <modules>
         <module>GDPCore</module>
-        <module>GetProductsService</module>
+        <module>GetProductService</module>
+        <module>CoordinateParse</module>
+        <module>elevation</module>
     </modules>
 
     <dependencyManagement>
