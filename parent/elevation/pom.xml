@@ -40,7 +40,8 @@
     
     <dependencies>
         <dependency>
-            <groupId>mil.nga.gdp.GDPCore</groupId>
+            <groupId>mil.nga.gdp.core</groupId>
+            <artifactId>GDPCore</artifactId>
             <version>${application.version}</version>
             <type>jar</type>
         </dependency>

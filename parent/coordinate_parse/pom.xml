@@ -3,6 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+    
     <parent>
         <groupId>mil.nga.gdp</groupId>
         <artifactId>parent</artifactId>
@@ -10,20 +11,17 @@
     </parent>
     
     <groupId>mil.nga.gdp.coordinate_parse</groupId>
-    <version>1.5</version>
     <artifactId>coordinate_parse</artifactId>
     <packaging>war</packaging>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jdk.version>1.8</jdk.version>
+        
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
         <maven-jaxws-plugin.version>2.5</maven-jaxws-plugin.version>
         <jaxws-rt.version>2.3.2</jaxws-rt.version>
         <cxf.version>3.3.1</cxf.version>
-        <logback.version>1.2.2</logback.version>
         <slf4j.version>1.7.25</slf4j.version>
         <servlet.version>2.5</servlet.version>
         <jstl.version>1.2</jstl.version>
@@ -31,32 +29,15 @@
         <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
         <json-api.version>1.1.4</json-api.version>
         <moxy.version>2.7.4</moxy.version>
-        <junit.version>4.12</junit.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>mil.nga.gdp.GDPCore</groupId>
+            <groupId>mil.nga.gdp.core</groupId>
+            <artifactId>GDPCore</artifactId>
             <version>${application.version}</version>
             <type>jar</type>
         </dependency>
-    <!--
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-core</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        -->
         <dependency>
             <groupId>javax.json</groupId>
             <artifactId>javax.json-api</artifactId>
@@ -90,22 +71,18 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-access</artifactId>
-            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
@@ -120,7 +97,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

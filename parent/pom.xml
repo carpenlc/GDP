@@ -30,7 +30,7 @@
     <modules>
         <module>GDPCore</module>
         <module>GetProductService</module>
-        <module>CoordinateParse</module>
+        <module>coordinate_parse</module>
         <module>elevation</module>
     </modules>
 
@@ -69,29 +69,5 @@
         </dependencies>
     </dependencyManagement>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxws-maven-plugin</artifactId>
-                <version>${jaxws.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>wsimport</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <keep>true</keep>
-                    <wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
-                    <sourceDestDir>target/generated</sourceDestDir>
-                    <packageName>mil.nga.gdp.core</packageName>
-                    <genJWS>true</genJWS>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     
 </project>
