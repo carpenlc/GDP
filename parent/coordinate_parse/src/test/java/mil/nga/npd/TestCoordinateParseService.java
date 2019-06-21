@@ -22,6 +22,7 @@ import mil.nga.coordinate_parse.ParseLongitude;
 import mil.nga.coordinate_parse.ParseLongitudeResponse;
 import mil.nga.coordinate_parse.ParseLongitudes;
 import mil.nga.coordinate_parse.ParseLongitudesResponse;
+import mil.nga.npd.types.CoordinateParseErrorMessageType;
 import mil.nga.security.SecurityElement;
 
 public class TestCoordinateParseService extends TestCoordinates {
@@ -42,49 +43,49 @@ public class TestCoordinateParseService extends TestCoordinates {
         GetErrorMessageResponse response = service.getErrorMessage(message);
         Assert.assertEquals(   
                 response.getErrorMessage(),
-                ErrorMessageType.ERROR_MINUS_1001.getErrorMessage());
+                CoordinateParseErrorMessageType.ERROR_MINUS_1001.getErrorMessage());
         
         message.setErrorNum(Double.valueOf(-1002));
         response = service.getErrorMessage(message);
         Assert.assertEquals(   
                 response.getErrorMessage(),
-                ErrorMessageType.ERROR_MINUS_1002.getErrorMessage());
+                CoordinateParseErrorMessageType.ERROR_MINUS_1002.getErrorMessage());
         
         message.setErrorNum(Double.valueOf(-1003));
         response = service.getErrorMessage(message);
         Assert.assertEquals(   
                 response.getErrorMessage(),
-                ErrorMessageType.ERROR_MINUS_1003.getErrorMessage());
+                CoordinateParseErrorMessageType.ERROR_MINUS_1003.getErrorMessage());
         
         message.setErrorNum(Double.valueOf(-1004));
         response = service.getErrorMessage(message);
         Assert.assertEquals(   
                 response.getErrorMessage(),
-                ErrorMessageType.ERROR_MINUS_1004.getErrorMessage());
+                CoordinateParseErrorMessageType.ERROR_MINUS_1004.getErrorMessage());
         
         message.setErrorNum(Double.valueOf(-1010));
         response = service.getErrorMessage(message);
         Assert.assertEquals(   
                 response.getErrorMessage(),
-                ErrorMessageType.ERROR_MINUS_1010.getErrorMessage());        
+                CoordinateParseErrorMessageType.ERROR_MINUS_1010.getErrorMessage());        
         
         message.setErrorNum(Double.valueOf(-1020));
         response = service.getErrorMessage(message);
         Assert.assertEquals(   
                 response.getErrorMessage(),
-                ErrorMessageType.ERROR_MINUS_1020.getErrorMessage());
+                CoordinateParseErrorMessageType.ERROR_MINUS_1020.getErrorMessage());
         
         message.setErrorNum(Double.valueOf(1000));
         response = service.getErrorMessage(message);
         Assert.assertEquals(   
                 response.getErrorMessage(),
-                ErrorMessageType.UNKNOWN_ERROR.getErrorMessage());
+                CoordinateParseErrorMessageType.UNKNOWN_ERROR.getErrorMessage());
         
         message.setErrorNum(Double.valueOf(-1000));
         response = service.getErrorMessage(message);
         Assert.assertEquals(   
                 response.getErrorMessage(),
-                ErrorMessageType.UNKNOWN_ERROR.getErrorMessage());
+                CoordinateParseErrorMessageType.UNKNOWN_ERROR.getErrorMessage());
     }
     
     @Test

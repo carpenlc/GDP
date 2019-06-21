@@ -22,6 +22,9 @@ import mil.nga.coordinate_parse.ParseLongitudeResponse;
 import mil.nga.coordinate_parse.ParseLongitudesResponse;
 import mil.nga.npd.exceptions.InternalServerErrorException;
 import mil.nga.npd.exceptions.InvalidParameterException;
+import mil.nga.npd.types.CoordinateParseErrorMessageType;
+import mil.nga.npd.types.OperationType;
+import mil.nga.npd.types.OutputFormatType;
 
 import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.eclipse.persistence.oxm.MediaType;
@@ -35,7 +38,7 @@ public class TestRestFilter extends TestCoordinates {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("operation", "ParseLatitudes");
         params.put("outputFormat", "xml");
-        RESTFilter filter = new RESTFilter.RESTFilterBuilder()
+        CoordinateParseRESTFilter filter = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build();
         Assert.assertEquals(
@@ -49,7 +52,7 @@ public class TestRestFilter extends TestCoordinates {
         params = new HashMap<String, Object>();
         params.put("operation", "parselatitudes");
         params.put("outputFormat", "json");
-        filter = new RESTFilter.RESTFilterBuilder()
+        filter = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build();
         Assert.assertEquals(
@@ -70,8 +73,8 @@ public class TestRestFilter extends TestCoordinates {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("operation", "GetErrorMessage");
         params.put("outputFormat", "xml");
-        params.put(RESTFilter.ERROR_NUMBER_PARAM, "-1001");
-        RESTFilter filter = new RESTFilter.RESTFilterBuilder()
+        params.put(CoordinateParseRESTFilter.ERROR_NUMBER_PARAM, "-1001");
+        CoordinateParseRESTFilter filter = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build();
         String responseStr = filter.translate();
@@ -86,15 +89,15 @@ public class TestRestFilter extends TestCoordinates {
         GetErrorMessageResponse response = jaxBResponse.getValue();
         
         Assert.assertEquals(
-                ErrorMessageType.ERROR_MINUS_1001.getErrorMessage(), 
+                CoordinateParseErrorMessageType.ERROR_MINUS_1001.getErrorMessage(), 
                 response.getErrorMessage());
         
         // Try a JSON version
         params = new HashMap<String, Object>();
         params.put("operation", "GetErrorMessage");
         params.put("outputFormat", "json");
-        params.put(RESTFilter.ERROR_NUMBER_PARAM, "-1002");
-        filter = new RESTFilter.RESTFilterBuilder()
+        params.put(CoordinateParseRESTFilter.ERROR_NUMBER_PARAM, "-1002");
+        filter = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build();
         responseStr = filter.translate();
@@ -110,7 +113,7 @@ public class TestRestFilter extends TestCoordinates {
 
         response = jaxBResponse.getValue();
         Assert.assertEquals(
-                ErrorMessageType.ERROR_MINUS_1002.getErrorMessage(), 
+                CoordinateParseErrorMessageType.ERROR_MINUS_1002.getErrorMessage(), 
                 response.getErrorMessage());
     }
     
@@ -124,8 +127,8 @@ public class TestRestFilter extends TestCoordinates {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("operation", OperationType.PARSE_COORD_PAIR.getText());
         params.put("outputFormat", "xml");
-        params.put(RESTFilter.COORD_PAIR_PARAM, "W123 01 25.2, N23 01 25.2,");
-        String responseStr = new RESTFilter.RESTFilterBuilder()
+        params.put(CoordinateParseRESTFilter.COORD_PAIR_PARAM, "W123 01 25.2, N23 01 25.2,");
+        String responseStr = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build()
                 .translate();
@@ -152,8 +155,8 @@ public class TestRestFilter extends TestCoordinates {
         params = new HashMap<String, Object>();
         params.put("operation", OperationType.PARSE_COORD_PAIR.getText());
         params.put("outputFormat", "json");
-        params.put(RESTFilter.COORD_PAIR_PARAM, "W123 01 25.2, N23 01 25.2,");
-        responseStr = new RESTFilter.RESTFilterBuilder()
+        params.put(CoordinateParseRESTFilter.COORD_PAIR_PARAM, "W123 01 25.2, N23 01 25.2,");
+        responseStr = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build()
                 .translate();
@@ -189,9 +192,9 @@ public class TestRestFilter extends TestCoordinates {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("operation", OperationType.PARSE_COORD_PAIRS.getText());
         params.put("outputFormat", "xml");
-        params.put(RESTFilter.COORD_PAIRS_PARAM, 
+        params.put(CoordinateParseRESTFilter.COORD_PAIRS_PARAM, 
                 "W123 01 25.2, N23 01 25.2, E37 45 59.9, S1 1 1.5, W1 8 0.1, S0 0 59.8");
-        String responseStr = new RESTFilter.RESTFilterBuilder()
+        String responseStr = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build()
                 .translate();
@@ -235,9 +238,9 @@ public class TestRestFilter extends TestCoordinates {
         params = new HashMap<String, Object>();
         params.put("operation", OperationType.PARSE_COORD_PAIRS.getText());
         params.put("outputFormat", "json");
-        params.put(RESTFilter.COORD_PAIRS_PARAM, 
+        params.put(CoordinateParseRESTFilter.COORD_PAIRS_PARAM, 
                 "W123 01 25.2, N23 01 25.2, E37 45 59.9, S1 1 1.5, W1 8 0.1, S0 0 59.8");
-        responseStr = new RESTFilter.RESTFilterBuilder()
+        responseStr = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build()
                 .translate();
@@ -288,8 +291,8 @@ public class TestRestFilter extends TestCoordinates {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("operation", "ParseLatitude");
         params.put("outputFormat", "xml");
-        params.put(RESTFilter.LATITUDE_PARAM, "N23 01 25.2");
-        String responseStr  = new RESTFilter.RESTFilterBuilder()
+        params.put(CoordinateParseRESTFilter.LATITUDE_PARAM, "N23 01 25.2");
+        String responseStr  = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build()
                 .translate();
@@ -312,8 +315,8 @@ public class TestRestFilter extends TestCoordinates {
         params = new HashMap<String, Object>();
         params.put("operation", "ParseLatitude");
         params.put("outputFormat", "json");
-        params.put(RESTFilter.LATITUDE_PARAM, "N23 01 25.2");
-        responseStr = new RESTFilter.RESTFilterBuilder()
+        params.put(CoordinateParseRESTFilter.LATITUDE_PARAM, "N23 01 25.2");
+        responseStr = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build()
                 .translate();
@@ -363,9 +366,9 @@ public class TestRestFilter extends TestCoordinates {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("operation", OperationType.PARSE_LATITUDES.getText());
         params.put("outputFormat", "xml");
-        params.put(RESTFilter.LATITUDES_PARAM, String.join(",", latitudes));
+        params.put(CoordinateParseRESTFilter.LATITUDES_PARAM, String.join(",", latitudes));
         
-        RESTFilter filter = new RESTFilter.RESTFilterBuilder()
+        CoordinateParseRESTFilter filter = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build();
         String responseStr = filter.translate();
@@ -393,8 +396,8 @@ public class TestRestFilter extends TestCoordinates {
         params = new HashMap<String, Object>();
         params.put("operation", OperationType.PARSE_LATITUDES.getText());
         params.put("outputFormat", "json");
-        params.put(RESTFilter.LATITUDES_PARAM, String.join(",", latitudes));
-        filter = new RESTFilter.RESTFilterBuilder()
+        params.put(CoordinateParseRESTFilter.LATITUDES_PARAM, String.join(",", latitudes));
+        filter = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build();
         responseStr = filter.translate();
@@ -433,8 +436,8 @@ public class TestRestFilter extends TestCoordinates {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("operation", OperationType.PARSE_LONGITUDE.getText());
         params.put("outputFormat", "xml");
-        params.put(RESTFilter.LONGITUDE_PARAM, "W123 01 25.2");
-        RESTFilter filter = new RESTFilter.RESTFilterBuilder()
+        params.put(CoordinateParseRESTFilter.LONGITUDE_PARAM, "W123 01 25.2");
+        CoordinateParseRESTFilter filter = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build();
         String responseStr = filter.translate();
@@ -457,8 +460,8 @@ public class TestRestFilter extends TestCoordinates {
         params = new HashMap<String, Object>();
         params.put("operation", OperationType.PARSE_LONGITUDE.getText());
         params.put("outputFormat", "json");
-        params.put(RESTFilter.LONGITUDE_PARAM, "W123 01 25.2");
-        filter = new RESTFilter.RESTFilterBuilder()
+        params.put(CoordinateParseRESTFilter.LONGITUDE_PARAM, "W123 01 25.2");
+        filter = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build();
         responseStr = filter.translate();
@@ -507,9 +510,9 @@ public class TestRestFilter extends TestCoordinates {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("operation", OperationType.PARSE_LONGITUDES.getText());
         params.put("outputFormat", "xml");
-        params.put(RESTFilter.LONGITUDES_PARAM, String.join(",", longitudes));
+        params.put(CoordinateParseRESTFilter.LONGITUDES_PARAM, String.join(",", longitudes));
         
-        RESTFilter filter = new RESTFilter.RESTFilterBuilder()
+        CoordinateParseRESTFilter filter = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build();
         String responseStr = filter.translate();
@@ -537,8 +540,8 @@ public class TestRestFilter extends TestCoordinates {
         params = new HashMap<String, Object>();
         params.put("operation", OperationType.PARSE_LONGITUDES.getText());
         params.put("outputFormat", "json");
-        params.put(RESTFilter.LONGITUDES_PARAM, String.join(",", longitudes));
-        filter = new RESTFilter.RESTFilterBuilder()
+        params.put(CoordinateParseRESTFilter.LONGITUDES_PARAM, String.join(",", longitudes));
+        filter = new CoordinateParseRESTFilter.RESTFilterBuilder()
                 .withParameterMap(params)
                 .build();
         responseStr = filter.translate();
