@@ -29,7 +29,6 @@
 
     <modules>
         <module>GDPCore</module>
-        <module>GetProductService</module>
         <module>coordinate_parse</module>
         <module>elevation</module>
     </modules>
