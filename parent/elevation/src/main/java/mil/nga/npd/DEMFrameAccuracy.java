@@ -15,7 +15,8 @@ import mil.nga.elevation.HeightUnitType;
  * 
  * @author L. Craig Carpenter
  */
-public class DEMFrameAccuracy implements Serializable, Constants {
+public class DEMFrameAccuracy 
+		implements Serializable, ElevationServiceConstants {
 
 	/**
 	 * Eclipse-generated serialVersionUID
@@ -127,16 +128,20 @@ public class DEMFrameAccuracy implements Serializable, Constants {
 		public DEMFrameAccuracy build() throws IllegalStateException {
 			if (units == HeightUnitType.FEET) {
 				if (absHorzAccuracy > -1) { 
-					absHorzAccuracy = Constants.convertToFeet(absHorzAccuracy);
+					absHorzAccuracy = ElevationServiceConstants
+							.convertToFeet(absHorzAccuracy);
 				}
 			 	if (absVertAccuracy > -1) {
-			 		absVertAccuracy = Constants.convertToFeet(absVertAccuracy);
+			 		absVertAccuracy = ElevationServiceConstants
+			 				.convertToFeet(absVertAccuracy);
 			 	}
 			 	if (relHorzAccuracy > -1) { 
-			 		relHorzAccuracy = Constants.convertToFeet(relHorzAccuracy);
+			 		relHorzAccuracy = ElevationServiceConstants
+			 				.convertToFeet(relHorzAccuracy);
 			 	}
 			 	if (relVertAccuracy > -1) {
-			 		relVertAccuracy = Constants.convertToFeet(relVertAccuracy);
+			 		relVertAccuracy = ElevationServiceConstants
+			 				.convertToFeet(relVertAccuracy);
 			 	}
 			}
 			DEMFrameAccuracy obj = new DEMFrameAccuracy(this);
@@ -214,36 +219,44 @@ public class DEMFrameAccuracy implements Serializable, Constants {
 		 */
 	 	private void validate(DEMFrameAccuracy obj) throws IllegalStateException {
 	 		if (units == HeightUnitType.FEET) { 
-		 		if (obj.getAbsHorzAccuracy() > Constants.convertToFeet(MAX_ACCURACY_VALUE_METERS)) {
+		 		if (obj.getAbsHorzAccuracy() > ElevationServiceConstants.convertToFeet(
+		 				MAX_ACCURACY_VALUE_METERS)) {
 		 			throw new IllegalStateException("The value for the absolute "
 		 					+ "horizontal accuracy is out of range [ "
 		 					+ obj.getAbsHorzAccuracy()
 		 					+ " ].  Must be [ 0..."
-		 					+ Constants.convertToFeet(MAX_ACCURACY_VALUE_METERS)
+		 					+ ElevationServiceConstants.convertToFeet(
+		 							MAX_ACCURACY_VALUE_METERS)
 		 					+ " ].");
 		 		}
-		 		if (obj.getAbsVertAccuracy() > Constants.convertToFeet(MAX_ACCURACY_VALUE_METERS)) {
+		 		if (obj.getAbsVertAccuracy() > ElevationServiceConstants.convertToFeet(
+		 				MAX_ACCURACY_VALUE_METERS)) {
 		 			throw new IllegalStateException("The value for the absolute "
 		 					+ "vertical accuracy is out of range [ "
 		 					+ obj.getAbsVertAccuracy()
 		 					+ " ].  Must be [ 0..."
-		 					+ Constants.convertToFeet(MAX_ACCURACY_VALUE_METERS)
+		 					+ ElevationServiceConstants.convertToFeet(
+		 							MAX_ACCURACY_VALUE_METERS)
 		 					+ " ].");
 		 		}
-		 		if (obj.getRelHorzAccuracy() > Constants.convertToFeet(MAX_ACCURACY_VALUE_METERS)) {
+		 		if (obj.getRelHorzAccuracy() > ElevationServiceConstants.convertToFeet(
+		 				MAX_ACCURACY_VALUE_METERS)) {
 		 			throw new IllegalStateException("The value for the relative "
 		 					+ "horizontal accuracy is out of range [ "
 		 					+ obj.getRelHorzAccuracy()
 		 					+ " ].  Must be [ 0..." 
-		 					+ Constants.convertToFeet(MAX_ACCURACY_VALUE_METERS)
+		 					+ ElevationServiceConstants.convertToFeet(
+		 							MAX_ACCURACY_VALUE_METERS)
 		 					+ " ].");
 		 		}
-		 		if (obj.getRelVertAccuracy() > Constants.convertToFeet(MAX_ACCURACY_VALUE_METERS)) {
+		 		if (obj.getRelVertAccuracy() > ElevationServiceConstants.convertToFeet(
+		 				MAX_ACCURACY_VALUE_METERS)) {
 		 			throw new IllegalStateException("The value for the relative "
 		 					+ "vertical accuracy is out of range [ "
 		 					+ obj.getRelVertAccuracy()
 		 					+ " ].  Must be [ 0..."
-		 					+ Constants.convertToFeet(MAX_ACCURACY_VALUE_METERS)
+		 					+ ElevationServiceConstants.convertToFeet(
+		 							MAX_ACCURACY_VALUE_METERS)
 		 					+ " ].");
 		 		}
 	 		}

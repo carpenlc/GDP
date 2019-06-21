@@ -35,6 +35,42 @@ public class BoundingBox implements Serializable {
 	}
 	
 	/**
+	 * Determine if the input lat/lon pair falls within the bounding 
+	 * box.
+	 * 
+	 * @param lat latitude value to test
+	 * @param lon longitude value to test
+	 * @return True if the point falls inside the bounding box, false
+	 * otherwise.
+	 */
+	public boolean isInside(double lat, double lon) {
+		boolean inside = false;
+		if ((lat >= getLowerRightLat()) && (lat <= getUpperRightLat())) {
+			if (lon >= getLowerRightLat() && (lon <= getUpperRightLon())) {
+				inside = true;
+			}
+		}
+		return inside;
+	}
+	
+	/**
+	 * Determine if the input <code>GeodeticCoordinate</code> falls within 
+	 * the bounding box.
+	 * 
+	 * @param lat latitude value to test
+	 * @param lon longitude value to test
+	 * @return True if the point falls inside the bounding box, false
+	 * otherwise.  
+	 */
+	public boolean isInside(GeodeticCoordinate point) {
+		boolean inside = false;
+		if (point != null) {
+			inside = isInside(point.getLat(), point.getLon());
+		}
+		return inside;
+	}
+	
+	/**
 	 * Getter method for the upper right latitude value.
 	 * @return The upper right latitude value of the geodetic coordinate.
 	 */
@@ -98,6 +134,19 @@ public class BoundingBox implements Serializable {
 		return lowerLeft.getLon();
 	}
 	
+	/**
+	 * Convert the object to a printable String.
+	 */
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Bounding Box: Lower Left Coordinate => [ ");
+		sb.append(lowerLeft.toString());
+		sb.append(" ], Upper Right Coordinate => [ ");
+		sb.append(upperRight.toString());
+		sb.append(" ].");
+		return sb.toString();
+	}
+	
     /**
      * Static inner class implementing the builder creation pattern for 
      * objects of type <code>BoundingBox</code>.
@@ -110,6 +159,19 @@ public class BoundingBox implements Serializable {
 		private double upperRightLon;
 		private double lowerLeftLat;
 		private double lowerLeftLon;
+		
+		/**
+		 * Setter method for the lower left coordinate.
+		 * @param value The lower left geodetic coordinate.
+		 * @return The builder object. 
+		 */
+		public BoundingBoxBuilder lowerLeft(GeodeticCoordinate value) {
+			if (value != null) {
+				lowerLeftLat = value.getLat();
+				lowerLeftLon = value.getLon();
+			}
+			return this;
+		}
 		
 		/**
 		 * Setter method for the lower left latitude value.
@@ -130,6 +192,19 @@ public class BoundingBox implements Serializable {
 		 */
 		public BoundingBoxBuilder lowerLeftLon(double value) {
 			lowerLeftLon = value;
+			return this;
+		}
+		
+		/**
+		 * Setter method for the upper right coordinate.
+		 * @param value The upper right geodetic coordinate.
+		 * @return The builder object. 
+		 */
+		public BoundingBoxBuilder upperRight(GeodeticCoordinate value) {
+			if (value != null) {
+				upperRightLat = value.getLat();
+				upperRightLon = value.getLon();
+			}
 			return this;
 		}
 		

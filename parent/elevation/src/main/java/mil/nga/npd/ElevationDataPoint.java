@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import mil.nga.elevation.HeightUnitType;
 
-public class ElevationDataPoint implements Serializable, Constants {
+public class ElevationDataPoint implements Serializable, ElevationServiceConstants {
 
 	/**
 	 * Eclipse-generated serialVersionUID
@@ -173,7 +173,7 @@ public class ElevationDataPoint implements Serializable, Constants {
 		 */
 		public ElevationDataPoint build() {
 			if (units == HeightUnitType.FEET) {
-				elevation = Constants.convertToFeet(elevation);
+				elevation = ElevationServiceConstants.convertToFeet(elevation);
 			}
 			if ((classificationMarking == null) || 
 					classificationMarking.isEmpty()) {
@@ -194,10 +194,10 @@ public class ElevationDataPoint implements Serializable, Constants {
 		 */
 		private void validate(ElevationDataPoint obj) throws IllegalStateException {
 			if (units == HeightUnitType.FEET) {
-				if (elevation > Constants.convertToFeet(MAX_ELEVATION)) { 
+				if (elevation > ElevationServiceConstants.convertToFeet(MAX_ELEVATION)) { 
 					throw new IllegalStateException("Invalid value for the "
 							+ "elevation.  The elevation must be between [ 0.."
-							+ Constants.convertToFeet(MAX_ELEVATION)
+							+ ElevationServiceConstants.convertToFeet(MAX_ELEVATION)
 							+ " ].");
 				}
 				else {

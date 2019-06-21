@@ -1,6 +1,6 @@
 package mil.nga.npd;
 
-public interface Constants {
+public interface ElevationServiceConstants {
 
 	/**
 	 * Constant defining the number of feet in a meter.

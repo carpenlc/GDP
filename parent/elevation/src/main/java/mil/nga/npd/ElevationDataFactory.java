@@ -20,7 +20,7 @@ import mil.nga.npd.exceptions.InvalidParameterException;
  * 
  * @author L. Craig Carpenter
  */
-public class ElevationDataFactory implements Constants {
+public class ElevationDataFactory implements ElevationServiceConstants {
 	
     /**
      * Set up the Logback system for use throughout the class.
@@ -35,6 +35,7 @@ public class ElevationDataFactory implements Constants {
 	
 	/**
 	 * Default constructor enforcing the builder creation pattern.
+	 * 
 	 * @param builder Object containing default values for the private final
 	 * internal parameters.
 	 */
@@ -48,11 +49,12 @@ public class ElevationDataFactory implements Constants {
 	/**
 	 * This method obtains the elevation and associated accuracy data 
 	 * associated with the input geodetic coordinate.  The method uses 
-	 * the third party com.bbn.openmap API for reading the target DEM.
-	 * This method has been modified from the legacy version to return 
-	 * the interpolated elevation of the target point rather than the 
-	 * elevation of the closest southwest post.  In the vast majority 
-	 * of cases this results in a more accurate elevation measurement.
+	 * the third party <code>com.bbn.openmap</code> API for reading the 
+	 * target DEM.  This method has been modified from the legacy version 
+	 * to return the interpolated elevation of the target point rather 
+	 * than the elevation of the closest southwest post.  In the vast 
+	 * majority of cases this results in a more accurate elevation 
+	 * measurement.
 	 * 
 	 * @param coordinate The target coordinate that we wish to find the 
 	 * elevation value for.

@@ -103,6 +103,7 @@ public class TerrainDataFileService {
     		TerrainDataType source) {
     	return getTerrainDataFiles(coord.getLat(), coord.getLon(), source);
     }
+    
     /**
      * 
      * @param lat
@@ -122,6 +123,7 @@ public class TerrainDataFileService {
     	String lonString = convertLon(lon);
     	
     	if (em != null) {
+    		
     		CriteriaBuilder cb = em.getCriteriaBuilder();
     		CriteriaQuery<TerrainDataFile> cq = cb.createQuery(TerrainDataFile.class);
     		Root<TerrainDataFile> root = cq.from(TerrainDataFile.class);

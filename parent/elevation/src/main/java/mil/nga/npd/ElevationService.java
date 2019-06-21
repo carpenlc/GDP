@@ -26,7 +26,7 @@ import mil.nga.npd.model.TerrainDataFile;
             endpointInterface = "mil.nga.elevation.Elevation", 
             targetNamespace = "mil:nga:elevation", 
             wsdlLocation = "WEB-INF/wsdl/elevation_service.wsdl")
-public class ElevationService implements Elevation, Constants {
+public class ElevationService implements Elevation, ElevationServiceConstants {
 
     /**
      * Set up the Logback system for use throughout the class.
@@ -34,10 +34,20 @@ public class ElevationService implements Elevation, Constants {
     private static final Logger LOGGER = 
             LoggerFactory.getLogger(ElevationService.class);
     
-
-	
+    
+    /**
+     * 
+     * @return
+     * @throws UnsupportedOperationException Thrown in a variety of cases.  
+     * We're throwing a runtime exception because the legacy WSDL-generated
+     * interfaces do not support a user-defined exception.
+     */
 	@Override
 	public GetElevationAtResponse getElevationAt(GetElevationAt parameters) {
+		
+		GetElevationAtResponse response = new GetElevationAtResponse();
+		response.setHeightType(parameters.getHeightType());
+		response.setSecurity();
 		
 		// Check any input parameters that could result in an NPE before
 		// proceeding with further processing.
@@ -62,10 +72,10 @@ public class ElevationService implements Elevation, Constants {
 		}
 		
 		// Initialize the optional params
-		HeightUnitType  units  = Constants.getValueOrDefault(
+		HeightUnitType  units  = ElevationServiceConstants.getValueOrDefault(
 				parameters.getHeightType(),
 				HeightUnitType.METERS);
-		TerrainDataType source = Constants.getValueOrDefault(
+		TerrainDataType source = ElevationServiceConstants.getValueOrDefault(
 				parameters.getTerrainDataType(),
 				TerrainDataType.DTED_0);
 		
@@ -86,7 +96,7 @@ public class ElevationService implements Elevation, Constants {
 		}
 		
 		// Loop through the user-supplied list of coordinates.
-		for (GeodeticCoordinateBean coordBean: parameters.getPts()) {
+		for (GeodeticCoordinateBean coordBean : parameters.getPts()) {
 			
 			// Since the WSDL specifies the coordinates are in String format, 
 			// convert them to primitives for further processing.
@@ -107,16 +117,14 @@ public class ElevationService implements Elevation, Constants {
 			if ((demFiles != null) && (demFiles.size() > 0)) { 
 				for (TerrainDataFile demFile : demFiles) {
 					try {
-						
 						elevationPoints.add(
 								new ElevationDataFactory.ElevationDataFactoryBuilder()
-								.filePath(demFile.getUnixPath())
-								.sourceType(source)
-								.units(units)
-								.classificationMarking(demFile.getMarking())
+									.filePath(demFile.getUnixPath())
+									.sourceType(source)
+									.units(units)
+									.classificationMarking(demFile.getMarking())
 								.build()
 							.getElevationAt(coord));
-						
 					}
 					catch (InvalidParameterException ipe) {
 						LOGGER.error("InvalidParameterException "
@@ -130,12 +138,12 @@ public class ElevationService implements Elevation, Constants {
 				}
 			}
 		}
-
-
-		// TODO Auto-generated method stub
-		return null;
+		return response;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public GetMinMaxElevationsResponse getMinMaxElevations(GetMinMaxElevations parameters) {
 
@@ -143,6 +151,9 @@ public class ElevationService implements Elevation, Constants {
 		return null;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public GetMinMaxElevationsWKTResponse getMinMaxElevationsWKT(GetMinMaxElevationsWKT parameters) {
 		// TODO Auto-generated method stub

@@ -18,7 +18,7 @@ import mil.nga.elevation.TerrainDataType;
  * file (defined by polygon) to find the minimum and maximum elevation posts
  * contained.
  */
-public class ElevationExtremesFactory implements Constants {
+public class ElevationExtremesFactory implements ElevationServiceConstants {
 
     /**
      * Set up the Logback system for use throughout the class.
@@ -57,9 +57,10 @@ public class ElevationExtremesFactory implements Constants {
      * represents the intersection of the two input <code>BoundingBox</code>
      * objects.  If there is no intersection the return value will be null.
      * 
-     * @param bbox1
-     * @param bbox2
-     * @return
+     * @param bbox1 A bounding box.
+     * @param bbox2 Another bounding box.
+     * @return The intersection of the two bounding boxes.  Null if the 
+     * bounding boxes do not intersect.
      */
     public BoundingBox getIntersection(
     		BoundingBox bbox1, 
@@ -68,11 +69,12 @@ public class ElevationExtremesFactory implements Constants {
     	
     	return intersection;
     }
+    
     /**
      * This method will determine the minimum and maximum elevation points 
      * that fall within the DEM frame identified by the input file path.
      * 
-     * @return Data structure containing the miniumum and maximum elevation
+     * @return Data structure containing the minimum and maximum elevation
      * points.
      * @throws IllegalStateException Thrown if there are any validation 
      * problems with the any of the return data.  Callers should check the
@@ -235,13 +237,12 @@ public class ElevationExtremesFactory implements Constants {
 		return result;
 	}
 	
-	
     /**
      * This method will determine the minimum and maximum elevation points 
      * that fall within the bounding box supplied.  
      * 
      * @param bbox client-defined bounding box.
-     * @return Data structure containing the miniumum and maximum elevation
+     * @return Data structure containing the minimum and maximum elevation
      * points.
      * @throws IllegalStateException Thrown if there are any validation 
      * problems with the any of the return data.  Callers should check the
@@ -250,11 +251,20 @@ public class ElevationExtremesFactory implements Constants {
 	public MinMaxElevation getMinMaxElevation(BoundingBox bbox) {
 		
 		long      startTime       = System.currentTimeMillis();
+
+		int       minElevation    = 32767;
+		int       maxElevation    = -32767;
+		int       postCounter     = 0;
+		double    maxElevationLat = 0.0;
+		double    maxElevationLon = 0.0;
+		double    minElevationLat = 0.0;
+		double    minElevationLon = 0.0;
+		double    currentLat      = 0;
+		double    currentLon      = 0;
 		
 		DTEDFrame        frame    = null;
 		DEMFrameAccuracy accuracy = null;
 		MinMaxElevation  result   = null;
-		
 		try {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Loading DEM frame file [ "
@@ -314,6 +324,88 @@ public class ElevationExtremesFactory implements Constants {
 							+ (System.currentTimeMillis() - startTime)
 							+ " ] ms.");
 				}
+				
+				// Loop through the individual posts
+				// Reset the time
+				startTime = System.currentTimeMillis();
+							
+				// Loop through the 2D array and look for the min/max
+				for (int row=0; row < posts.length; row++) {
+					
+					currentLat = frameBounds.getLowerLeftLat() + 
+							(row * latPostSpacing);
+					
+					for (int column=0; column < posts[row].length; column++) {
+						currentLon = frameBounds.getLowerLeftLon() + 
+								(column * lonPostSpacing);
+						
+						postCounter++;
+						
+						// Check to see if the post falls within the bounding box
+						if (intersection.isInside(currentLat, currentLon)) {
+							
+							// Check to see if the elevation is lower than the current
+							// max elevation.
+							if ((posts[row][column] < (short)minElevation) && 
+									(posts[row][column] != INVALID_ELEVATION_VALUE)) {
+								
+								// Save the minimum elevation and associated point
+								minElevation    = posts[row][column];
+								minElevationLat = currentLat;
+								minElevationLon = currentLon;
+								
+							}
+							
+							// Check to see if the elevation is higher than the current
+							// max elevation.
+							if ((posts[row][column] > (short)maxElevation) && 
+									(posts[row][column] != INVALID_ELEVATION_VALUE)) {
+								
+								// Save the max elevation and associated point
+								maxElevation    = posts[row][column];
+								maxElevationLat = currentLat;
+								maxElevationLon = currentLon;
+							}
+						} 
+					} // end column loop
+				} // end row loop
+				
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Completed processing [ "
+							+ postCounter
+							+ " ] elevation posts in [ "
+							+ (System.currentTimeMillis() - startTime)
+							+ " ].");
+				}
+				
+				// Construct the return data structure.  This could result
+				// in a IllegalStateException exception.
+				result = new MinMaxElevation.MinMaxElevationBuilder()
+						.maxElevation(
+								new ElevationDataPoint.ElevationDataPointBuilder()
+									.elevation(maxElevation)
+									.classificationMarking(getClassificationMarking())
+									.units(getUnits())
+									.withDEMFrameAccuracy(accuracy)
+									.withGeodeticCoordinate(
+											new GeodeticCoordinate.GeodeticCoordinateBuilder()
+											.lat(maxElevationLat)
+											.lon(maxElevationLon)
+											.build())
+									.build())
+						.minElevation(
+								new ElevationDataPoint.ElevationDataPointBuilder()
+								.elevation(minElevation)
+								.classificationMarking(getClassificationMarking())
+								.units(getUnits())
+								.withDEMFrameAccuracy(accuracy)
+								.withGeodeticCoordinate(
+										new GeodeticCoordinate.GeodeticCoordinateBuilder()
+										.lat(minElevationLat)
+										.lon(minElevationLon)
+										.build())
+								.build())
+						.build();
 			}
 			else {
 				LOGGER.warn("The input bounding box [ "

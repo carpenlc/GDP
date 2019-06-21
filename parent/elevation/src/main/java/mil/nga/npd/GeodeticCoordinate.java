@@ -3,6 +3,7 @@ package mil.nga.npd;
 import java.io.Serializable;
 
 import mil.nga.elevation.GeodeticCoordinateBean;
+import mil.nga.npd.types.CoordinateParseErrorMessageType;
 
 /**
  * Simple data structure holding a single geodetic coordinate (lat/lon).  
@@ -28,18 +29,6 @@ public class GeodeticCoordinate implements Serializable {
 	protected GeodeticCoordinate(GeodeticCoordinateBuilder builder) {
 		lat = builder.lat;
 		lon = builder.lon;
-	}
-	
-	/**
-	 * Create a <code>GeodeticCoordinateBean</code> object from the 
-	 * data contained by this object.
-	 * @return A constructed <code>GeodeticCoordinateBean</code> object.
-	 */
-	public GeodeticCoordinateBean getGeodeticCoordinateBean() {
-		GeodeticCoordinateBean bean = new GeodeticCoordinateBean();
-		bean.setLat(String.valueOf(getLat()));
-		bean.setLon(String.valueOf(getLon()));
-		return bean;
 	}
 	
 	/**
@@ -184,7 +173,7 @@ public class GeodeticCoordinate implements Serializable {
 	            		"Invalid latitude value => [ " 
 	            	    + coord.getLat()
 	            	    + " ].  Conversion error message => [ " 
-	            	    + ErrorMessageType.getErrorMessage(coord.getLat())
+	            	    + CoordinateParseErrorMessageType.getErrorMessage(coord.getLat())
 	            	    + " ].");
 	        }
 	        if (coord.getLon() < -1000) {
@@ -192,7 +181,7 @@ public class GeodeticCoordinate implements Serializable {
 	            		"Invalid longitude value => [ " 
 	            	    + coord.getLon()
 	            	    + " ].  Conversion error message => [ " 
-	            	    + ErrorMessageType.getErrorMessage(coord.getLon())
+	            	    + CoordinateParseErrorMessageType.getErrorMessage(coord.getLon())
 	            	    + " ].");
 	        }
 	        // Next, make sure the coordinates are within valid ranges.
