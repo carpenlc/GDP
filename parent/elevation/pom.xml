@@ -27,6 +27,7 @@
         <slf4j.version>1.7.25</slf4j.version>
         <servlet.version>2.5</servlet.version>
         <jstl.version>1.2</jstl.version>
+        <json.version>20180813</json.version>
         <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
         <json-api.version>1.1.4</json-api.version>
         <hibernate.version>5.4.2.Final</hibernate.version>
@@ -114,6 +115,11 @@
             <groupId>org.locationtech.jts</groupId>
             <artifactId>jts-core</artifactId>
             <version>${jts.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
