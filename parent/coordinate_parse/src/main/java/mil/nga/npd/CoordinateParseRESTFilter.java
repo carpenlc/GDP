@@ -34,6 +34,8 @@ import mil.nga.coordinate_parse.ParseLongitudesResponse;
 import mil.nga.security.SecurityElement;
 import mil.nga.npd.exceptions.InternalServerErrorException;
 import mil.nga.npd.exceptions.InvalidParameterException;
+import mil.nga.npd.types.OperationType;
+import mil.nga.npd.types.OutputFormatType;
 
 /**
  * The purpose of this class is to translate input GET parameters into 
@@ -46,13 +48,13 @@ import mil.nga.npd.exceptions.InvalidParameterException;
  *  
  * @author L. Craig Carpenter
  */
-public class RESTFilter {
+public class CoordinateParseRESTFilter extends RESTFilter {
 
     /**
      * Set up the Logback system for use throughout the class.
      */
     private static final Logger LOGGER = 
-            LoggerFactory.getLogger(RESTFilter.class);
+            LoggerFactory.getLogger(CoordinateParseRESTFilter.class);
     
     /**
      * Parameter that must be supplied with the <code>GetErrorMessage</code>
@@ -96,19 +98,7 @@ public class RESTFilter {
      */
     public static final String COORD_PAIRS_PARAM = "CoordinatePairStrings";
     
-    /**
-     * Parameter used to specify the output format.  This is case-sensitive.
-     */
-    public static final String OUTPUT_FORMAT_PARAM = "outputFormat";
-    
-    /**
-     * Parameter used to specify the operation.  This is case-sensitive.
-     */
-    public static final String OPERATION_PARAM = "operation";
-    
-    private final OutputFormatType    outputFormat;
     private final OperationType       operation;
-    private final Map<String, Object> params;
     
     /**
      * Default object embedded in all of the calls to the JAX-WS methods.
@@ -120,11 +110,9 @@ public class RESTFilter {
      * 
      * @param builder The builder object.
      */
-    protected RESTFilter(RESTFilterBuilder builder) {
-        
+    protected CoordinateParseRESTFilter(RESTFilterBuilder builder) {
+    	super(builder.outputFormat, builder.params);
         operation    = builder.operation;
-        outputFormat = builder.outputFormat;
-        params       = builder.params;
         
         // Set up the SecurityElement
         defaultSecElement= new SecurityElement();
@@ -132,43 +120,6 @@ public class RESTFilter {
         defaultSecElement.getOwnerProducer().add("USA");
     }
     
-    /**
-     * During testing we found that *some* of the parameters  extracted
-     * from the servlet parameter map were arrays of strings vs simple
-     * String values.  This method was introduced to handle that case.
-     * 
-     * @param map The input parameter map from the servlet.
-     * @param name The name of the requested parameter.
-     * @return The requested value.  Null if the value is not found.
-     * @throws InvalidParameterException Thrown if an unexpected type is 
-     * encountered.
-     */
-    protected static String getParameter(
-            Map<String, Object> 
-            map, String name) 
-                    throws InvalidParameterException {
-        String value = null;
-        if (map.get(name) instanceof String) {
-            value = (String)map.get(name);
-        }
-        else if (map.get(name) instanceof String[]) {
-            String[] temp = (String[])map.get(name);
-            if (temp.length > 0) {
-                value = temp[0];
-            }
-        }
-        else {
-            if (map.get(name) != null) {
-                throw new InvalidParameterException("Map value for key [ "
-                        + name
-                        + " ] is of an unexpected object type. Object is of "
-                        + "type => [ "
-                        + map.get(name).getClass().getName()
-                        + " ].");
-            }
-        }
-        return value;
-    }
     
     /**
      * Public facing method that executes the requested operation.
@@ -219,7 +170,7 @@ public class RESTFilter {
             throws InternalServerErrorException, 
                    InvalidParameterException {
         
-        String                 coordPair = getParameter(params, COORD_PAIR_PARAM);
+        String                 coordPair = getParameter(getInputParams(), COORD_PAIR_PARAM);
         String                 result    = null;
         StringWriter           sw        = null;
         ParseCoordPair         message   = new ParseCoordPair();
@@ -313,7 +264,7 @@ public class RESTFilter {
             throws InternalServerErrorException, 
                    InvalidParameterException {
         
-        String                 coordPairs = getParameter(params, COORD_PAIRS_PARAM);
+        String                 coordPairs = getParameter(getInputParams(), COORD_PAIRS_PARAM);
         String                 result     = null;
         StringWriter           sw         = null;
         ParseCoordPairs        message    = new ParseCoordPairs();
@@ -413,7 +364,7 @@ public class RESTFilter {
             throws InternalServerErrorException, 
                    InvalidParameterException {
         
-        String                 latString = getParameter(params, LATITUDE_PARAM);
+        String                 latString = getParameter(getInputParams(), LATITUDE_PARAM);
         String                 result    = null;
         StringWriter           sw        = null;
         ParseLatitude          message   = new ParseLatitude();
@@ -491,7 +442,7 @@ public class RESTFilter {
             throws InternalServerErrorException, 
                    InvalidParameterException {
         
-        String                 latString = getParameter(params, LATITUDES_PARAM);
+        String                 latString = getParameter(getInputParams(), LATITUDES_PARAM);
         String                 result    = null;
         StringWriter           sw        = null;
         ParseLatitudes         message   = new ParseLatitudes();
@@ -583,7 +534,7 @@ public class RESTFilter {
             throws InternalServerErrorException, 
                    InvalidParameterException {
         
-        String                 lonString = getParameter(params, LONGITUDE_PARAM);
+        String                 lonString = getParameter(getInputParams(), LONGITUDE_PARAM);
         String                 result    = null;
         StringWriter           sw        = null;
         ParseLongitude         message   = new ParseLongitude();
@@ -661,7 +612,7 @@ public class RESTFilter {
             throws InternalServerErrorException, 
                    InvalidParameterException {
         
-        String                 lonString = getParameter(params, LONGITUDES_PARAM);
+        String                 lonString = getParameter(getInputParams(), LONGITUDES_PARAM);
         String                 result    = null;
         StringWriter           sw        = null;
         ParseLongitudes        message   = new ParseLongitudes();
@@ -752,7 +703,7 @@ public class RESTFilter {
             throws InternalServerErrorException, 
                    InvalidParameterException {
         
-        String                 errorNumber = getParameter(params, ERROR_NUMBER_PARAM);
+        String                 errorNumber = getParameter(getInputParams(), ERROR_NUMBER_PARAM);
         String                 result      = null;
         StringWriter           sw          = null;
         GetErrorMessage        message     = new GetErrorMessage();
@@ -832,30 +783,7 @@ public class RESTFilter {
         return operation;
     }
     
-    /**
-     * Getter method for the requested output format.
-     * @return The output format.
-     */
-    public OutputFormatType getOutputFormat() {
-        return outputFormat;
-    }
-    
-    /**
-     * Getter method that creates the media type from the output format
-     * type.  Used to control whether we output JSON or XML.
-     * @return The media type String.
-     */
-    public String getMediaType() {
-        String mediaType = "text/plain";
-        switch (getOutputFormat()) {
-            case XML:
-                mediaType = "application/xml";
-                break;
-            case JSON:
-                mediaType = "application/json";
-        }
-        return mediaType;
-    }
+
     
     /**
      * Static inner class implementing the builder creation pattern for 
@@ -921,14 +849,14 @@ public class RESTFilter {
          * @throws InvalidParameterException Thrown if there are problems parsing
          * the input parameters.
          */
-        public RESTFilter build() throws InvalidParameterException {
+        public CoordinateParseRESTFilter build() throws InvalidParameterException {
             if ((params == null) || (params.size() == 0)) {
                 throw new InvalidParameterException("Input parameter map is null "
                         + "or empty.  Unable to parse the input parameters.");
             }
             operation    = getOperation();
             outputFormat = getOutputFormat();
-            return new RESTFilter(this);
+            return new CoordinateParseRESTFilter(this);
         }
     }
 }

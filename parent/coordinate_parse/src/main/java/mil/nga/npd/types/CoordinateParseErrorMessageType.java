@@ -1,4 +1,4 @@
-package mil.nga.npd;
+package mil.nga.npd.types;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.Map;
  * 
  * @author L. Craig Carpenter
  */
-public enum ErrorMessageType {
+public enum CoordinateParseErrorMessageType {
     ERROR_MINUS_1001(
             "-1001", 
             "Latitude has an invalid character"),
@@ -118,7 +118,7 @@ public enum ErrorMessageType {
      * @param code The error code.
      * @param message The error message.
      */
-    ErrorMessageType(String code, String message) {
+    CoordinateParseErrorMessageType(String code, String message) {
         this.code = code;
         this.message = message;
     }
@@ -180,7 +180,7 @@ public enum ErrorMessageType {
      */
     private static Map<String, String> initializeMapping() {
         Map<String, String> mapping = new HashMap<String, String>();
-        for (ErrorMessageType t : ErrorMessageType.values()) {
+        for (CoordinateParseErrorMessageType t : CoordinateParseErrorMessageType.values()) {
             mapping.put(t.getErrorCode(), t.getErrorMessage());
         }
         return mapping;

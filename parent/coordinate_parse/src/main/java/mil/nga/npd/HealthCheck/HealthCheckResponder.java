@@ -12,7 +12,7 @@ import mil.nga.npd.utils.FileUtils;
 
 /**
  * Simple servlet used to test access to target web containers.  All it does
- * echo back the server name.
+ * echo back the server name.  
  * 
  * @author L. Craig Carpenter
  */

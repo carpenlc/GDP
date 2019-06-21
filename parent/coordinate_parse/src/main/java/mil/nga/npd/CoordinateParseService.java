@@ -23,6 +23,7 @@ import mil.nga.coordinate_parse.ParseLongitude;
 import mil.nga.coordinate_parse.ParseLongitudeResponse;
 import mil.nga.coordinate_parse.ParseLongitudes;
 import mil.nga.coordinate_parse.ParseLongitudesResponse;
+import mil.nga.npd.types.CoordinateParseErrorMessageType;
 import mil.nga.security.SecurityElement;
 
 @WebService(
@@ -72,16 +73,16 @@ public class CoordinateParseService implements CoordinateParse {
         
         if (parameters != null) {
             response.setErrorMessage(
-                    ErrorMessageType.getErrorMessage(
+                    CoordinateParseErrorMessageType.getErrorMessage(
                             parameters.getErrorNum()));
         }
         else {
             LOGGER.warn("Input parameter object was null.  Response will "
                     + "be [ "
-                    + ErrorMessageType.UNKNOWN_ERROR.getErrorMessage()
+                    + CoordinateParseErrorMessageType.UNKNOWN_ERROR.getErrorMessage()
                     + " ].");
             response.setErrorMessage(
-                    ErrorMessageType.UNKNOWN_ERROR.getErrorMessage());
+                    CoordinateParseErrorMessageType.UNKNOWN_ERROR.getErrorMessage());
         }
         return response;
     }
@@ -108,15 +109,14 @@ public class CoordinateParseService implements CoordinateParse {
                     if ((parameters.getCoordinatePairString().getLongitude() != null) && 
                             (!parameters.getCoordinatePairString().getLongitude().isEmpty())){
                         
-                        CoordsParse    parser = new CoordsParse();
                         CoordinatePair coords = new CoordinatePair();
                         
                         coords.setLatitude(
-                                parser.parseCoordString(
+                        		CoordsParse.getInstance().parseCoordString(
                                         parameters.getCoordinatePairString().getLatitude(), 
                                         true));
                         coords.setLongitude(                                
-                                parser.parseCoordString(
+                                CoordsParse.getInstance().parseCoordString(
                                         parameters.getCoordinatePairString().getLongitude(), 
                                         false));
                         response.setCoordinatePair(coords);
@@ -174,7 +174,6 @@ public class CoordinateParseService implements CoordinateParse {
     public ParseCoordPairsResponse parseCoordPairs(ParseCoordPairs parameters) {
         
         ParseCoordPairsResponse response = new ParseCoordPairsResponse();
-        CoordsParse             parser   = new CoordsParse();
         
         response.setSecurity(secElement);
         
@@ -190,11 +189,11 @@ public class CoordinateParseService implements CoordinateParse {
                         
                             CoordinatePair coordPair = new CoordinatePair();
                             coordPair.setLatitude(
-                                    parser.parseCoordString(
+                            		CoordsParse.getInstance().parseCoordString(
                                             coords.getLatitude(), 
                                             true));
                             coordPair.setLongitude(
-                                    parser.parseCoordString(
+                            		CoordsParse.getInstance().parseCoordString(
                                             coords.getLongitude(), 
                                             false));
                             
@@ -253,8 +252,7 @@ public class CoordinateParseService implements CoordinateParse {
             if ((parameters.getLatitude() != null) && 
                     (!parameters.getLatitude().isEmpty())) { 
                 
-                CoordsParse parser = new CoordsParse();
-                Double value = parser.parseCoordString(
+                Double value = CoordsParse.getInstance().parseCoordString(
                         parameters.getLatitude(), 
                         true);
                 response.setLatitude(value);
@@ -299,7 +297,6 @@ public class CoordinateParseService implements CoordinateParse {
     public ParseLatitudesResponse parseLatitudes(ParseLatitudes parameters) {
         
         ParseLatitudesResponse response = new ParseLatitudesResponse();
-        CoordsParse            parser   = new CoordsParse();
         
         response.setSecurity(secElement);
         
@@ -309,7 +306,7 @@ public class CoordinateParseService implements CoordinateParse {
 
                 for (String coord : parameters.getLatitudes()) {
                     response.getLatitudes().add(
-                            parser.parseCoordString(coord, true));
+                    		CoordsParse.getInstance().parseCoordString(coord, true));
                 }
 
             }
@@ -350,8 +347,7 @@ public class CoordinateParseService implements CoordinateParse {
             if ((parameters.getLongitude() != null) && 
                     (!parameters.getLongitude().isEmpty())) { 
                 
-                CoordsParse parser = new CoordsParse();
-                Double value = parser.parseCoordString(
+                Double value = CoordsParse.getInstance().parseCoordString(
                         parameters.getLongitude(), 
                         false);
                 response.setLongitude(value);
@@ -402,11 +398,9 @@ public class CoordinateParseService implements CoordinateParse {
             if ((parameters.getLongitudes() != null) && 
                     (parameters.getLongitudes().size() > 0)) {
                 
-                CoordsParse parser = new CoordsParse();
-                
                 for (String coord : parameters.getLongitudes()) {
                     response.getLongitudes().add(
-                            parser.parseCoordString(coord, false));
+                    		CoordsParse.getInstance().parseCoordString(coord, false));
                 }
 
             }

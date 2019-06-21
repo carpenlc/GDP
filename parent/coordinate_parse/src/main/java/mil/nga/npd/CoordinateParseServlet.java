@@ -40,7 +40,7 @@ public class CoordinateParseServlet extends HttpServlet {
                     throws ServletException, IOException {
         
         try {
-            String responseStr = new RESTFilter.RESTFilterBuilder()
+            String responseStr = new CoordinateParseRESTFilter.RESTFilterBuilder()
                     .withParameterMap(request.getParameterMap())
                     .build()
                     .translate();
