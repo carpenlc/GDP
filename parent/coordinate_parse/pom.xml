@@ -25,7 +25,7 @@
         <slf4j.version>1.7.25</slf4j.version>
         <servlet.version>2.5</servlet.version>
         <jstl.version>1.2</jstl.version>
-        <bouncycastle.version>1.61</bouncycastle.version>
+        <bouncycastle.version>1.67</bouncycastle.version>
         <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
         <json-api.version>1.1.4</json-api.version>
         <moxy.version>2.7.4</moxy.version>
